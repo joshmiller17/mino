@@ -9,6 +9,18 @@ CARDS_IN_HAND = 3
 NUM_PLAYERS = 3
 DEBUG = True
 
+# TODO
+# - Add Trading Phase
+# --- Add default Trading behavior
+# --- Add Playing cards to sets
+# ----- Add default Playing behavior
+# - Add Ending Phase
+# --- Add Playing hand to sets
+# --- Add Scoring sets
+# - Add Abilities
+# - Add Information Modeling
+# - Add non-default behaviors
+
 class Card:
 
 	def __init__(self, n, q, a):
