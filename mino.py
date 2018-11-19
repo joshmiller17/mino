@@ -421,12 +421,16 @@ def setup():
 def main():
 	import argparse
 	global args
+	global DEBUG_LEVEL
 	prog_desc = "Automated playtesting of Mino, a strategic set building game about amino acids."
 	parser = argparse.ArgumentParser(description=prog_desc)
 	parser.add_argument('players', default=3, help="Number of players")
 	parser.add_argument('handsize', default=5, help="Number of cards in hand")
 	parser.add_argument('numpiles', default=10, help="Number of unique cards (piles) to use in the game")
+	parser.add_argument('debug', default=0, help="Level of debugging detail")
 	args = parser.parse_args()
+	if args.debug > DEBUG_LEVEL:
+		DEBUG_LEVEL = args.debug
 	setup()
 	
 
