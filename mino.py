@@ -10,9 +10,6 @@ import copy
 #import threading
 
 
-CARDS_IN_HAND = 5
-CARDS_IN_TABLE = 10
-NUM_PLAYERS = 3
 DEBUG_LEVEL = 1
 
 # TODO
@@ -243,6 +240,7 @@ class Game:
 
 
 def assert_card_accountability(game):
+	global args
 	if not DEBUG_LEVEL: # when not debugging, don't check card accountability
 		return
 		
@@ -259,7 +257,7 @@ def assert_card_accountability(game):
 	
 	issue_cards = []
 	for card, quantity in card_dict.items():
-		if quantity != NUM_PLAYERS:
+		if quantity != args.players:
 			issue_cards.append(card)
 			print("ERROR: Cards duplicated or lost, " + str(card) + " -> " + str(quantity))
 			for pile in game.table.piles:
@@ -280,6 +278,7 @@ def assert_card_accountability(game):
 	
 		
 def play_game(game):
+	global args
 
 	random.seed()
 	
@@ -290,7 +289,7 @@ def play_game(game):
 	if DEBUG_LEVEL > 0:
 		print("\nOPENING PHASE")
 	round = 0
-	while (round < CARDS_IN_HAND):
+	while (round < args.handsize):
 		for player in players:
 			if DEBUG_LEVEL > 0:
 				print("\n" + str(player.name) + "\'s turn")
@@ -379,7 +378,8 @@ def print_cards(set):
 	ret += ")"
 	return ret
 	
-def setup(args):
+def setup():
+	global args
 
 	cards = []
 	cards.append(Card("Ala", ["Aliphatic", "Hydrophobic", "Tiny", "Alkyl group"], "Alanine Ambivalence"))
@@ -403,7 +403,7 @@ def setup(args):
 	cards.append(Card("Gly", ["Conditionally Essential", "Alkyl group", "Tiny"], "Glycine Ambivalence"))
 	cards.append(Card("Pro", ["Conditionally Essential", "Nonpolar", "Tiny"], "Double Bind"))
 
-	card_subset = random.sample(cards, CARDS_IN_TABLE)
+	card_subset = random.sample(cards, args.numpiles)
 	
 	table = Table(card_subset, 3)
 	game = Game(table)
@@ -420,12 +420,14 @@ def setup(args):
 
 def main():
 	import argparse
+	global args
 	prog_desc = "Automated playtesting of Mino, a strategic set building game about amino acids."
 	parser = argparse.ArgumentParser(description=prog_desc)
-	#parser.add_argument('input', help="Input file name")
-	#parser.add_argument('output', help="Output file name")
+	parser.add_argument('players', default=3, help="Number of players")
+	parser.add_argument('handsize', default=5, help="Number of cards in hand")
+	parser.add_argument('numpiles', default=10, help="Number of unique cards (piles) to use in the game")
 	args = parser.parse_args()
-	setup(args)
+	setup()
 	
 
 if '__main__' == __name__:
